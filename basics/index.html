@@ -10,13 +10,16 @@
 <body>
 
     <div class="flex flex-col gap-6 m-12">
-  <h1 id="heading" class="text-3xl font-bold tracking-tight">Todo app</h1>
+  <h1 id="heading" class="text-3xl font-bold tracking-tight">Todo app 
+
+    <span id="from-storage"></span>
+  </h1>
 
   <div class="flex flex-row gap-3">
     <input id="task-input" type="text" placeholder="Enter your task" class="rounded-lg border border-gray-200 bg-gray-100 p-2" />
-
+    
     <button id="add-task-button" onclick="addTask()" class="rounded-full bg-black px-3 py-2 text-white hover:bg-gray-800">Add Task</button>
-    <button id="add-task-button" onclick="deleteAll()" class="rounded-full bg-red-500 px-3 py-2 text-white hover:bg-red-600">Delete all</button>
+    <button id="delete-all-button" onclick="deleteAll()" class="rounded-full bg-red-500 px-3 py-2 text-white hover:bg-red-600">Delete all</button>
   </div>
 
   <div class="flex flex-col gap-3">

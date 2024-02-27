@@ -1,98 +1,61 @@
-    // Load tasks from local storage when the page is loaded
-    loadTasks();
+// Get DOM elements
+const taskInput = document.getElementById('taskInput');
+const taskList = document.getElementById('taskList');
 
-    let taskInput = document.getElementById('taskInput');
-    let taskList = document.getElementById('taskList');
+// Load tasks from local storage when the page is loaded
+window.onload = loadTasks;
 
-    function addTask() {
-        console.log('addTask called');
-        let taskText = taskInput.value.trim();
+function addTask() {
+    const taskText = taskInput.value.trim();
 
-        if (taskText !== '') {
-            // Create a new task object
-            let newTask = {
-                text: taskText,
-                id: Date.now(),
-            };
-
-            // Add the task to the task list
-            appendTaskToList(newTask);
-
-            // Save tasks to local storage
-            saveTasks();
-
-            // Clear the input field
-            taskInput.value = '';
-        }
-    }
-
-    
-
-    function removeTask(button) {
-        // Get the parent task and remove it
-        let task = button.parentNode;
-        task.parentNode.removeChild(task);
-
-        // Get the task ID
-        let taskId = parseInt(task.getAttribute('data-id'));
-
-        // Remove the task from local storage
-        removeTaskFromLocalStorage(taskId);
-    }
-
-    function appendTaskToList(task) {
-        // Create a new list item
-        let newTask = document.createElement('li');
-        newTask.textContent = task.text;
-        newTask.setAttribute('data-id', task.id);
-
-        // Add a delete button to each task
-        let deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        
-        // add tailwindcss class to delete button
-        deleteButton.className = 'bg-red-500 hover:bg-red-700 text-white font-medium text-md py-2 px-4 rounded';
-        deleteButton.onclick = function () {
-            removeTask(this);
+    if (taskText) {
+        const newTask = {
+            text: taskText,
+            id: Date.now(),
         };
 
-        // Append the delete button to the task
-        newTask.appendChild(deleteButton);
-
-        // Append the task to the task list
-        taskList.appendChild(newTask);
+        appendTaskToList(newTask);
+        saveTasks();
+        taskInput.value = '';
     }
+}
 
-    function saveTasks() {
-        // Get all tasks from the task list
-        let tasks = Array.from(taskList.children).map(task => {
-            return {
-                text: task.textContent,
-                id: parseInt(task.getAttribute('data-id')),
-            };
-        });
+function removeTask(button) {
+    const task = button.parentNode;
+    task.parentNode.removeChild(task);
+    removeTaskFromLocalStorage(parseInt(task.getAttribute('data-id')));
+}
 
-        // Save tasks to local storage
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
+function appendTaskToList({ text, id }) {
+    const newTask = document.createElement('li');
+    newTask.textContent = text;
+    newTask.setAttribute('data-id', id);
 
-    function loadTasks() {
-        // Get tasks from local storage
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'bg-red-500 hover:bg-red-700 text-white font-medium text-md py-2 px-4 rounded';
+    deleteButton.onclick = () => removeTask(deleteButton);
 
-        // Append each task to the task list
-        tasks.forEach(task => {
-            appendTaskToList(task);
-        });
-    }
+    newTask.appendChild(deleteButton);
+    taskList.appendChild(newTask);
+}
 
-    function removeTaskFromLocalStorage(taskId) {
-        // Get tasks from local storage
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+function saveTasks() {
+    const tasks = Array.from(taskList.children).map(task => ({
+        text: task.textContent,
+        id: parseInt(task.getAttribute('data-id')),
+    }));
 
-        // Remove the task with the specified ID
-        tasks = tasks.filter(task => task.id !== taskId);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
-        // Save updated tasks to local storage
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    tasks.forEach(appendTaskToList);
+}
+
+function removeTaskFromLocalStorage(taskId) {
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+}
