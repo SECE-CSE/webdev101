@@ -1,10 +1,6 @@
 function addTask() {
-
     // search for input element with id 'task-input'
     var task = document.getElementById('task-input').value
-
-  
-
 
     // check if task is empty
     if (task.trim() !== '') {
@@ -47,7 +43,6 @@ function addTask() {
 
     // Append delete button to the task item
     taskItem.appendChild(deleteButton)
-    
 
     // now add the task item to the task list dom
     document.getElementById('task-list').appendChild(taskItem)
@@ -55,11 +50,7 @@ function addTask() {
     // clear the input field
     document.getElementById('task-input').value = ''
     
-    }
-
-
-   
-    
+    }    
 }
 
 function deleteAll() {
