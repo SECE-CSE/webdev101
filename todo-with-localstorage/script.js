@@ -51,6 +51,7 @@ function saveTasks() {
 
 function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    console.log('Parsed Tasks', tasks);
     tasks.forEach(appendTaskToList);
 }
 
