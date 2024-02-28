@@ -108,6 +108,6 @@
 20. **Remove Data:**
     ```javascript
     localStorage.removeItem('key');
-    ```
+    ```****
 
 Explore the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) for in-depth information on DOM manipulation.
