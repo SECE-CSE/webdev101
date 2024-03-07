@@ -42,6 +42,7 @@ app.on('all', '/*', async (c, next) => {
 })
 
 
+// All KV namespace routes
 app.get('/', (c) => {
   return c.text('Welcome to Todo API')
 })
