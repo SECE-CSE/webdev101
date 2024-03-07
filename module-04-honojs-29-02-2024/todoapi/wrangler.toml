@@ -1,0 +1,22 @@
+name = "todoapi"
+compatibility_date = "2023-12-01"
+
+[vars]
+USERNAME = "username"
+PASSWORD = "password"
+AUTH_TOKEN="13e20026d166d99418c737e0a65cb1482ea2e7f7de5fde9986bb4006c108edde"
+NAME = "SANJU"
+ALLOWED_ORIGINS = "http://localhost:5173"
+
+[[kv_namespaces]]
+binding = "TODOKV"
+id = "d2073686cbb24e34be0a1102ed7c8256"
+
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "todod1"
+database_id = "a9911f3d-ed81-485c-88e4-e40f528ee726"
