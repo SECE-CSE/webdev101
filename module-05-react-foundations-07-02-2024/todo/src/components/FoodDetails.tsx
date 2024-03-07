@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-type Food = {
+type Post = {
+  userId: number;
   id: number;
-  name: string;
-  description: string;
-  price: number;
+  title: string;
+  body: string;
 };
 
 export default function FoodDetails() {
-  const { food_id } = useParams();
-  const [food, setFood] = useState<Food>();
+  const { id } = useParams();
+  const [post, setPost] = useState<Post>();
 
   useEffect(() => {
-    fetch(`http://localhost:5173/food/${food_id}`)
-      .then((res) => res.json())
-      .then((data) => setFood(data))
-      .finally(() => {
-        console.log('done');
-      })
-  }, [food_id]);
+    fetch('https://jsonplaceholder.typicode.com/posts/' + id, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + 'asdfasd',
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => setPost(json))
+      .finally(() => console.log('api call completed'));
+  }, [id]);
 
   return (
     <div>
-      <h1>Food details</h1>
-      <h1>{food_id}</h1>
-
-      {food && (
-        <div>
-          <h1>{food.name}</h1>
-          <p>{food.description}</p>
-          <p>{food.price}</p>
-        </div>
-      )}
+      <h1>Post details</h1>
+      <div>
+        <h2>{post?.title}</h2>
+        <p>{post?.body}</p>
+      </div>
     </div>
   );
 }

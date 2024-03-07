@@ -30,6 +30,10 @@ function App() {
             <li>
               <Link to="/exampletodo">Example todo</Link>
             </li>
+
+            <li>
+              <Link to="/food/20">Food list</Link>
+            </li>
           </ul>
         </nav>
 
@@ -39,7 +43,7 @@ function App() {
           <Route path="/add" Component={AddTodo} />
           <Route path="/exampletodo" Component={ExampleTodo} />
           <Route path="/todo/:id" Component={TodoDetail} />
-          <Route path="/food/:food_id" Component={FoodDetails} />
+          <Route path="/food/:id" Component={FoodDetails} />
           <Route
             path="/about"
             element={<About title="Todo app is nice" ratings={5} />}
