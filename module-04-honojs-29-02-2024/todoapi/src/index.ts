@@ -41,75 +41,12 @@ app.on('all', '/*', async (c, next) => {
   return applyAuth(c, next);
 })
 
-app.post('/todos/sql/new', async (c) => {
 
-  // Get the body data from the request
-  const {id, title, description, is_completed } = await c.req.json()
-
-  // Add to d1 database. Here we are using bind to prevent SQL injection
-  const { success } = await c.env.DB.prepare(`
-    INSERT INTO tasks (task_id, title, description, is_completed) values (?, ?, ?, ?);
-  `).bind(id, title, description, is_completed).run()
-
-  if (success) {
-    return c.text('Task created')
-  } else {
-    return c.text('Task creation failed')
-  }
+app.get('/', (c) => {
+  return c.text('Welcome to Todo API')
 })
 
-app.get('/todos/sql/get-all', async (c) => {
-
-  // Get all tasks from the database
-  const tasks = await c.env.DB.prepare(`
-    SELECT * FROM tasks;
-  `).all()
-
-  // return the tasks
-  return c.json(tasks)
-})
-
-app.put('/todos/sql/update/:id', async (c) => {
-
-  // get the todo id from the request
-  const id = c.req.param('id')
-
-  // Get the body data from the request
-  const { title, description, is_completed } = await c.req.json()
-
-  // Update the todo by id. We use bind to prevent SQL injection
-  const { success } = await c.env.DB.prepare(`
-    UPDATE tasks SET title = ?, description = ?, is_completed = ? WHERE task_id = ?;
-  `).bind(title, description, is_completed, id).run()
-
-  // return success message
-  if (success) {
-    return c.text('Task updated')
-  } else {
-    return c.text('Task update failed')
-  }
-})
-
-app.post('/todos/new', async (c) => {
-
-  // Get the body data from the request
-  const {id, task, description, is_completed } = await c.req.json()
-  
-  // Pass the body data to object
-  const newTodo: Todo = {
-    id: id,
-    task: task,
-    description: description,
-    is_completed: is_completed,
-  }
-
-  // Add to database
-  await c.env.TODOKV.put(`todo:${newTodo.id}`, JSON.stringify(newTodo))
-
-  // return success message
-  return c.text('Todo created')
-})
-
+// get all todos
 app.get('/todos', async (c) => {
   // Get all keys with prefix "todo:"
   const all_todos = await c.env.TODOKV.list({ prefix: "todo:" });
@@ -137,6 +74,7 @@ app.get('/todos', async (c) => {
   return c.json(parsedtodos)
 })
 
+// get all todos faster with map
 app.get('/todos-faster', async (c) => {
    // Get all keys with prefix "todo:"
   const all_todos = await c.env.TODOKV.list({ prefix: "todo:" });
@@ -159,6 +97,28 @@ app.get('/todos-faster', async (c) => {
   return c.json(parsedtodos);
 })
 
+// create a new todo
+app.post('/todos/new', async (c) => {
+
+  // Get the body data from the request
+  const {id, task, description, is_completed } = await c.req.json()
+  
+  // Pass the body data to object
+  const newTodo: Todo = {
+    id: id,
+    task: task,
+    description: description,
+    is_completed: is_completed,
+  }
+
+  // Add to database
+  await c.env.TODOKV.put(`todo:${newTodo.id}`, JSON.stringify(newTodo))
+
+  // return success message
+  return c.text('Todo created')
+})
+
+// update a todo by id
 app.get('/todos/:id', async (c) => {
   // get the todo id from the request
   const id = c.req.param('id')
@@ -170,6 +130,7 @@ app.get('/todos/:id', async (c) => {
   return c.json(todo)
 })
 
+// delete a todo by id
 app.delete('/delete/:id', async (c) => {
   // get the todo id from the request
   const id = c.req.param('id')
@@ -181,26 +142,6 @@ app.delete('/delete/:id', async (c) => {
   return c.text('Todo deleted')
 })
 
-app.get('/', (c) => {
-  return c.text('Welcome to Todo API')
-})
-
-app.delete('/todos/:id', async (c) => {
-  // get the todo id from the request
-  const id = c.req.param('id')
-
-  // get all todos
-  const todos = JSON.parse(await c.env.TODOKV.get('todos') || '[]') as Todo[]
-
-  // remove the todo
-  const updatedTodos = todos.filter((todo) => todo.id !== id)
-
-  // save the updated todos
-  await c.env.TODOKV.put('todos', JSON.stringify(updatedTodos))
-
-  // return the updated todos
-  return c.json(updatedTodos)
-});
 
 app.delete('/todos', async (c) => {
   // find all todos with the prefix "todo:"
@@ -211,6 +152,80 @@ app.delete('/todos', async (c) => {
 
   return c.text('All todos deleted')
 });
+
+
+// d1 database routes (SQLite)
+
+// get all todos from d1 database
+app.get('/todos/sql/get-all', async (c) => {
+
+  // Get all tasks from the database
+  const tasks = await c.env.DB.prepare(`
+    SELECT * FROM tasks;
+  `).all()
+
+  // return the tasks
+  return c.json(tasks)
+})
+
+
+// create a new todo in d1 database
+app.post('/todos/sql/new', async (c) => {
+
+  // Get the body data from the request
+  const {id, title, description, is_completed } = await c.req.json()
+
+  // Add to d1 database. Here we are using bind to prevent SQL injection
+  const { success } = await c.env.DB.prepare(`
+    INSERT INTO tasks (task_id, title, description, is_completed) values (?, ?, ?, ?);
+  `).bind(id, title, description, is_completed).run()
+
+  if (success) {
+    return c.text('Task created')
+  } else {
+    return c.text('Task creation failed')
+  }
+})
+
+// get a todo by id from d1 database
+app.put('/todos/sql/update/:id', async (c) => {
+
+  // get the todo id from the request
+  const id = c.req.param('id')
+
+  // Get the body data from the request
+  const { title, description, is_completed } = await c.req.json()
+
+  // Update the todo by id. We use bind to prevent SQL injection
+  const { success } = await c.env.DB.prepare(`
+    UPDATE tasks SET title = ?, description = ?, is_completed = ? WHERE task_id = ?;
+  `).bind(title, description, is_completed, id).run()
+
+  // return success message
+  if (success) {
+    return c.text('Task updated')
+  } else {
+    return c.text('Task update failed')
+  }
+})
+
+// delete a todo by id from d1 database
+app.delete('/todos/sql/delete/:id', async (c) => {
+    // get the todo id from the request
+    const id = c.req.param('id')
+  
+    // delete the todo by id
+    const { success } = await c.env.DB.prepare(`
+      DELETE FROM tasks WHERE task_id = ?;
+    `).bind(id).run()
+  
+    // return success message
+    if (success) {
+      return c.text('Task deleted')
+    } else {
+      return c.text('Task deletion failed')
+    }
+})
 
 
 export default app

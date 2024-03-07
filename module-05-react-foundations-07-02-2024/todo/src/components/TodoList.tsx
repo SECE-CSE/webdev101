@@ -2,11 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Todo, cn } from '../utils/utils';
 import useFetch from '../hooks/useFetch';
-import { useTheme } from './ThemeProvider';
 
 export default function TodoList() {
-  const { theme, toggleTheme } = useTheme();
-
   const {
     data: todos,
     loading,
@@ -17,14 +14,10 @@ export default function TodoList() {
 
   return (
     <div
-      className={cn(
-        'mx-auto container items-center justify-center p-6 m-6',
-        theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-100',
-      )}
+      className={cn('mx-auto container items-center justify-center p-6 m-6')}
     >
       <div className="flex flex-row items-center justify-between gap-3">
         <h2 className="text-2xl font-bold tracking-tight">Todo List</h2>
-        <button onClick={toggleTheme}>Toggle theme</button>
       </div>
 
       {loading ? (
