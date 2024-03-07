@@ -143,7 +143,7 @@ app.delete('/delete/:id', async (c) => {
   return c.text('Todo deleted')
 })
 
-
+// delete all todos
 app.delete('/todos', async (c) => {
   // find all todos with the prefix "todo:"
   const allTodos = await c.env.TODOKV.list({ prefix: 'todo:' })
