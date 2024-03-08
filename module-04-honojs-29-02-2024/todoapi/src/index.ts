@@ -8,6 +8,8 @@ type Todo = {
   task: string; // "Buy milk"
   description: string; // "Buy 2% milk from the grocery store"
   is_completed: boolean; // false
+  created_at: string; // "2021-08-01T12:00:00Z"
+  updated_at: string; // "2021-08-01T12:00:00Z"
 };
 
 type Bindings = {
@@ -110,6 +112,8 @@ app.post('/todos/new', async (c) => {
     task: task,
     description: description,
     is_completed: is_completed,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   }
 
   // Add to database
@@ -119,7 +123,7 @@ app.post('/todos/new', async (c) => {
   return c.text('Todo created')
 })
 
-// update a todo by id
+// get a todo by id
 app.get('/todos/:id', async (c) => {
   // get the todo id from the request
   const id = c.req.param('id')
@@ -129,6 +133,32 @@ app.get('/todos/:id', async (c) => {
 
   // return the todo
   return c.json(todo)
+})
+// update a todo by id
+app.put('/todos/update/:id', async (c) => {
+  // get the todo id from the request
+  const id = c.req.param('id')
+
+  // Get the body data from the request
+  const { task, description, is_completed } = await c.req.json()
+
+  // Get the todo by id
+  const todo = await c.env.TODOKV.get(id)
+
+  // Parse the todo
+  const parsedTodo: Todo = JSON.parse(todo!)
+
+  // Update the todo
+  parsedTodo.task = task
+  parsedTodo.description = description
+  parsedTodo.is_completed = is_completed
+  parsedTodo.updated_at = new Date().toISOString()
+
+  // Save the updated todo
+  await c.env.TODOKV.put(`todo:${parsedTodo.id}`, JSON.stringify(parsedTodo))
+
+  // return success message
+  return c.text('Todo updated')
 })
 
 // delete a todo by id
