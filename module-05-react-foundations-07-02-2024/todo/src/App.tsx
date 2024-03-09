@@ -8,6 +8,7 @@ import About from './components/About';
 import Counter from './components/Counter';
 import ExampleTodo from './components/ExampleTodo';
 import FoodDetails from './components/FoodDetails';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
             <li>
               <Link to="/add">Add Todo</Link>
             </li>
+
+            <li>
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
             <li>
               <Link to="/About">About</Link>
             </li>
@@ -30,7 +35,6 @@ function App() {
             <li>
               <Link to="/exampletodo">Example todo</Link>
             </li>
-
             <li>
               <Link to="/food/20">Food list</Link>
             </li>
@@ -42,6 +46,7 @@ function App() {
           <Route path="/counter" Component={Counter} />
           <Route path="/add" Component={AddTodo} />
           <Route path="/exampletodo" Component={ExampleTodo} />
+          <Route path="/dashboard" Component={Dashboard} />
           <Route path="/todo/:id" Component={TodoDetail} />
           <Route path="/food/:id" Component={FoodDetails} />
           <Route

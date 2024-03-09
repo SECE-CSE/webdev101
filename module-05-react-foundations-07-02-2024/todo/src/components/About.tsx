@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AboutDetails from './AboutDetails';
-import { SlotContainer } from './SlotContainer';
+import { DashboardLayout } from './DashboardLayout';
 
 interface AboutProps {
   title: string;
@@ -8,14 +8,13 @@ interface AboutProps {
 }
 
 export default function About({ title, ratings }: AboutProps) {
-
   return (
     <div>
       <h2>About page</h2>
 
-      <SlotContainer>
+      <DashboardLayout>
         <AboutDetails title={title} ratings={ratings} />
-      </SlotContainer>
+      </DashboardLayout>
     </div>
   );
 }

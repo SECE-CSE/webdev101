@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Todo } from '../utils/utils';
+import { DashboardLayout } from './DashboardLayout';
 
 export default function AddTodo() {
 
@@ -27,7 +28,7 @@ export default function AddTodo() {
   };
 
   return (
-    <div>
+    <DashboardLayout>
       <h2>Add Todo</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -46,7 +47,7 @@ export default function AddTodo() {
         </label>
         <button type='submit'>Add</button>
       </form>
-    </div>
+    </DashboardLayout>
   );
 }
 

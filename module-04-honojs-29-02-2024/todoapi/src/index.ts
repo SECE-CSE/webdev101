@@ -117,7 +117,9 @@ app.post('/todos/new', async (c) => {
   }
 
   // Add to database
-  await c.env.TODOKV.put(`todo:${newTodo.id}`, JSON.stringify(newTodo))
+  await c.env.TODOKV.put(`todo:${newTodo.id}`, JSON.stringify(newTodo), {
+  expirationTtl: 60 * 60 * 24 * 7, // 1 week
+  })
 
   // return success message
   return c.text('Todo created')

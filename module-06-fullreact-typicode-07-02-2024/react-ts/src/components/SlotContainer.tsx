@@ -5,9 +5,7 @@ interface SlotContainerProps {
 }
 
 export const SlotContainer: FC<SlotContainerProps> = ({ children }) => {
-  return (
-    <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0' }}>
-      {children}
-    </div>
-  );
+  return <div className='bg-red-50'>{children}</div>;
 };
+
+

@@ -4,15 +4,13 @@ import { Todo, cn } from '../utils/utils';
 import useFetch from '../hooks/useFetch';
 
 export default function TodoList() {
-  const {
-    data: todos,
-    loading,
-    error,
-  } = useFetch({
+
+  const { data: todos, loading, error } = useFetch({
     url: 'https://jsonplaceholder.typicode.com/todos',
   });
 
   return (
+
     <div
       className={cn('mx-auto container items-center justify-center p-6 m-6')}
     >
