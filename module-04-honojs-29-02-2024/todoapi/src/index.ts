@@ -260,5 +260,19 @@ app.delete('/todos/sql/delete/:id', async (c) => {
     }
 })
 
+// search todos by title from d1 database
+app.get('/todos/sql/search', async (c) => {
+  // get the title from the request
+  const title = c.req.query('title')
+
+  // search for todos by title
+  const tasks = await c.env.DB.prepare(`
+    SELECT * FROM tasks WHERE title LIKE ?;
+  `).bind(`%${title}%`).all()
+
+  // return the tasks
+  return c.json(tasks)
+})
+
 
 export default app

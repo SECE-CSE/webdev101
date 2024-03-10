@@ -11,20 +11,6 @@ export default function AddTodo() {
 
   const [todo, setTodo] = useState<Todo>()
 
-  // handle form submit
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
-    fetch('https://jsonplaceholder.typicode.com/todos', {
-      method: 'POST',
-      body: JSON.stringify(todo),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log('Todo created:', json));
-  };
-
   const onSubmitData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
@@ -43,8 +29,6 @@ export default function AddTodo() {
     return (
     <div>
         <h1>Add Todo</h1>
-
-        <div>{JSON.stringify(todo)}</div>
 
         <form onSubmit={onSubmitData}>
 

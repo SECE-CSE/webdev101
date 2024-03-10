@@ -9,6 +9,7 @@ type Todo = {
 }
 
 export default function TodoList() {
+    const [search, setSearch] = useState<string>('')
     const [todos, setTodos] = useState<Todo[]>([])
     
     useEffect(() => { 
@@ -18,9 +19,16 @@ export default function TodoList() {
         .finally(() => console.log('Todos fetched'))
     }, [])    
 
+    useEffect(() => {
+        const filteredTodos = todos.filter((todo) => todo.title.toLowerCase().includes(search.toLowerCase()))
+        setTodos(filteredTodos)
+    }, [search])
+
   return (
     <div>
           <h1>Todo List</h1>
+
+          <input type="text" placeholder='search todo' value={search} onChange={(e) => setSearch(e.target.value)} />
           
           {
               todos.map((todo) => (
