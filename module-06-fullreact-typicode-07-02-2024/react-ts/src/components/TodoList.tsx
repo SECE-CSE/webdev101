@@ -22,18 +22,10 @@ export default function TodoList() {
     
 
     useEffect(() => {
-
-        console.log('Searching todos');
-        
         const filteredTodos = todos.filter((todo) => {
             return todo.title.includes(search)
-        })
-
-        console.log('Search done!');
-        
+        })        
         setFilteredTodos(filteredTodos)
-        
-
     }, [search])
 
   
