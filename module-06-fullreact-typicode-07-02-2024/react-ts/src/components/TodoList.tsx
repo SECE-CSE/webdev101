@@ -9,34 +9,55 @@ type Todo = {
 }
 
 export default function TodoList() {
-    const [search, setSearch] = useState<string>('')
     const [todos, setTodos] = useState<Todo[]>([])
+    const [search, setSearch] = useState<string>('')
+    const [filteredTodos, setFilteredTodos] = useState<Todo[]>([])
     
     useEffect(() => { 
         fetch('https://jsonplaceholder.typicode.com/todos')
         .then((response) => response.json())
         .then((data) => setTodos(data))
         .finally(() => console.log('Todos fetched'))
-    }, [])    
+    }, [])   
+    
 
     useEffect(() => {
-        const filteredTodos = todos.filter((todo) => todo.title.toLowerCase().includes(search.toLowerCase()))
-        setTodos(filteredTodos)
+
+        console.log('Searching todos');
+        
+        const filteredTodos = todos.filter((todo) => {
+            return todo.title.includes(search)
+        })
+
+        console.log('Search done!');
+        
+        setFilteredTodos(filteredTodos)
+        
+
     }, [search])
 
+  
   return (
     <div>
           <h1>Todo List</h1>
-
-          <input type="text" placeholder='search todo' value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input type="text" value={search} placeholder='Search somthing' onChange={(e) => setSearch(e.target.value)} />
           
           {
-              todos.map((todo) => (
+              search.length > 0 ?(
+                  filteredTodos.map((todo) => (
                   <Link to={`/todo/${todo.id}`}>
                       <h3>{todo.title}</h3>
                       <p>{todo.completed}</p>
                   </Link>
               ))
+              ) : (
+                  todos.map((todo) => (
+                      <Link to={`/todo/${todo.id}`}>
+                          <h3>{todo.title}</h3>
+                          <p>{todo.completed}</p>
+                      </Link>
+                  ))
+              )
           }
     </div>
   )
