@@ -12,6 +12,7 @@ export default function TodoList() {
     const [todos, setTodos] = useState<Todo[]>([])
     const [search, setSearch] = useState<string>('')
     const [filteredTodos, setFilteredTodos] = useState<Todo[]>([])
+    const [hoveredTodo, setHoveredTodo] = useState<number | null>(null)
     
     useEffect(() => { 
         fetch('https://jsonplaceholder.typicode.com/todos')
@@ -28,11 +29,29 @@ export default function TodoList() {
         setFilteredTodos(filteredTodos)
     }, [search])
 
+
+    
+ async function deleteTodo(id: number) {
+      await fetch('https://jsonplaceholder.typicode.com/todos/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer mysupertoken'
+            }
+        }).then(() => console.log('Todo deleted'))
+ }
+    
+
   
   return (
     <div>
           <h1>Todo List</h1>
-          <input type="text" value={search} placeholder='Search somthing' onChange={(e) => setSearch(e.target.value)} />
+          <input
+              type="text"
+              value={search}
+              placeholder='Search somthing'
+              onChange={(e) => setSearch(e.target.value)}
+          />
           
           {
               search.length > 0 ?(
@@ -44,9 +63,14 @@ export default function TodoList() {
               ))
               ) : (
                   todos.map((todo) => (
-                      <Link to={`/todo/${todo.id}`}>
+                      <Link to={`/todo/${todo.id}`}
+                          className={`${hoveredTodo === todo.id ? 'scale-50' : ''}`}
+                          onMouseEnter={() => setHoveredTodo(todo.id)}
+                          onMouseLeave={() => setHoveredTodo(null)}>
                           <h3>{todo.title}</h3>
                           <p>{todo.completed}</p>
+
+                          <button onClick={() => deleteTodo(todo.id)}>Delete</button>
                       </Link>
                   ))
               )

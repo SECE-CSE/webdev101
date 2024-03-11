@@ -6,6 +6,20 @@ CREATE TABLE IF NOT EXISTS tasks (
     is_completed BOOLEAN DEFAULT 0,
 );
 
+CREATE TABLE IF NOT EXISTS thoughts (
+    thoughts_id TEXT PRIMARY KEY,
+    thoughts TEXT NOT NULL
+)
+
+
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+    created_at TEXT
+);
+
 -- Insert some tasks
 INSERT INTO tasks (title, description, is_completed) VALUES
     ('Complete Project Report', 'Finish the project report for the upcoming deadline.', 0);

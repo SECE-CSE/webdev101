@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
 import { bearerAuth } from 'hono/bearer-auth';
 import { cors } from 'hono/cors'
+import { nanoid } from 'nanoid';
+import { getCookie, getSignedCookie, setCookie, setSignedCookie, deleteCookie } from 'hono/cookie'
 
 
 type Todo = {
@@ -275,6 +277,98 @@ app.get('/todos/sql/search', async (c) => {
 })
 
 
+// CREATE TABLE IF NOT EXISTS thoughs (
+//     thoughts_id INTEGER PRIMARY KEY,
+//     thoughts TEXT NOT NULL
+// )
 
+// post new thougths
+app.post('/thoughts/new', async (c) => {
+  // Get the body data from the request
+  const { thoughts } = await c.req.json()
+
+  // Add to d1 database. Here we are using bind to prevent SQL injection
+  const { success, error } = await c.env.DB.prepare(`
+    INSERT INTO thoughts (thoughts_id, thoughts) values (?, ?);
+  `).bind(nanoid(5), JSON.stringify(thoughts)).run()
+
+  if (success) {
+    return c.text('thoughts created')
+  } else {
+    return c.json({
+      message: 'Error creating thoughts',
+      error: error
+    })
+  }
+})
+// CREATE TABLE IF NOT EXISTS users (
+    // user_id INTEGER PRIMARY KEY,
+    // username TEXT NOT NULL,
+    // password TEXT NOT NULL,
+    // email TEXT NOT NULL,
+    // created_at TEXT
+// );
+
+// create a new user
+app.post('/users/new', async (c) => {
+  // Get the body data from the request
+  const { username, password, email } = await c.req.json()
+
+  // Add to d1 database. Here we are using bind to prevent SQL injection
+  const { success, error } = await c.env.DB.prepare(`
+    INSERT INTO users (username, password, email, created_at) values (?, ?, ?, ?);
+  `).bind(username, password, email, new Date().toISOString()).run()
+
+  if (success) {
+    // set a cookie
+    setCookie(c, 'username', username, {
+      httpOnly: true,
+      secure: true
+    })
+    // return success message
+    return c.text('User created')
+  } else {
+    return c.json({
+      message: 'Error creating user',
+      error: error
+    })
+  }
+})
+
+// get all users from d1 database
+app.get('/users/get-all', async (c) => {
+
+  // Get all users from the database
+  const users = await c.env.DB.prepare(`
+    SELECT * FROM users;
+  `).all()
+
+  // return the users
+  return c.json(users)
+})
+
+// verify user
+app.post('/users/verify', async (c) => {
+  // Get the body data from the request
+  const { username, password } = await c.req.json()
+
+  // verify user
+  const user = await c.env.DB.prepare(`
+    SELECT * FROM users WHERE username = ? AND password = ?;
+  `).bind(username, password).run()
+
+  if (user) {
+
+    // set a cookie
+    setCookie(c, 'username', username, {
+      httpOnly: true,
+      secure: true
+    })
+
+    return c.json(user)
+  } else {
+    return c.text('User not found')
+  }
+})
 
 export default app
