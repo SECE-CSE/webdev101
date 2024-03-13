@@ -12,6 +12,7 @@ const ProtectedRoute = ({ component, ...args } : any) => {
   return <Component />;
 };
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -38,6 +39,7 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute component={Profile} />} />
         <Route path="/login" element={<LoginButton />} />
         <Route path="/logout" element={<LogoutButton />} />
+        <Route path="/contact" element={<h1>Contact us</h1>} />
       </Routes>
     </BrowserRouter>
   )

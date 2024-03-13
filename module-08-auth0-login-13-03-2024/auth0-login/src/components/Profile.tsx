@@ -4,7 +4,8 @@ export default function Profile() {
   const { user } = useAuth0();
   return <div>
     <h1>Profile</h1>
-    <p>Welcome {user?.name}</p>
+    <img src={user?.picture} alt="" />
+    <p>Welcome {user?.email}</p>
   </div>;
 }
 
