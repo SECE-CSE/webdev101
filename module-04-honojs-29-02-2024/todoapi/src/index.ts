@@ -29,7 +29,7 @@ app.use('*', async (c, next) => {
 
   // CORS middleware configuration
   const corsMiddleware = cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://'],
     allowHeaders: ['Origin', 'Content-Type', 'Authorization'],
     allowMethods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE'],
     credentials: true,
@@ -276,11 +276,19 @@ app.get('/todos/sql/search', async (c) => {
   return c.json(tasks)
 })
 
+// get todos by title or description
+app.get('/todos/sql/search/:query', async (c) => {
+  // get the query from the request
+  const query = c.req.param('query')
 
-// CREATE TABLE IF NOT EXISTS thoughs (
-//     thoughts_id INTEGER PRIMARY KEY,
-//     thoughts TEXT NOT NULL
-// )
+  // search for todos by title or description
+  const tasks = await c.env.DB.prepare(`
+    SELECT * FROM tasks WHERE title LIKE ? OR description LIKE ?;
+  `).bind(`%${query}%`, `%${query}%`).all()
+
+  // return the tasks
+  return c.json(tasks)
+})
 
 // post new thougths
 app.post('/thoughts/new', async (c) => {
@@ -301,13 +309,6 @@ app.post('/thoughts/new', async (c) => {
     })
   }
 })
-// CREATE TABLE IF NOT EXISTS users (
-    // user_id INTEGER PRIMARY KEY,
-    // username TEXT NOT NULL,
-    // password TEXT NOT NULL,
-    // email TEXT NOT NULL,
-    // created_at TEXT
-// );
 
 // create a new user
 app.post('/users/new', async (c) => {
