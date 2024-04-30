@@ -11,7 +11,7 @@ const port = 3000;
 // Connect to MongoDB
 mongoose
 	.connect(
-		"mongodb://root:rj7nEFvvJWzE6nuv7OWupKTlIW972T92ZhBMK0vTvEU0N4xD0SiXFLLsE5RPaD9y@95.217.223.21:9876/?directConnection=true",
+		"mongodb://localhost:27017/todo-app",
 	)
 	.then(() => {
 		console.log("Yay! We are connected to the database!");
