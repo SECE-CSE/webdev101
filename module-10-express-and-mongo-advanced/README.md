@@ -40,11 +40,6 @@
 - `PUT /api/todos/:id`: Updates a Todo by its ID.
 - `DELETE /api/todos/:id`: Deletes a Todo by its ID.
 
-### User Routes
-
-- `GET /api/users`: Fetches all Users.
-- `POST /api/users`: Creates a new User.
-
 ## Middlewares
 
 - **authMiddleware**: Example authentication middleware. Verifies authorization tokens.
